@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>Headling Encoding JS Unit Tests</title>
+		
+		<style>
+			body { font-family: Arial }
+			table { border-spacing: 0; border-collapse: collapse }
+			td,th { border: 1px solid #000; padding-left: .3em; padding-right: .3em }
+			tr:nth-child(even) { background-color: #ccc }
+			td.pass { background-color: #090 }
+			td.fail { background-color: #900 }
+			
+		</style>
+	</head>
+	<body>
+		<h1>Unit Tests</h1>
+		<table id="test-results">
+			<tr>
+				<th>Test Name</th>
+				<th>Status</th>
+				<th>Error Message</th>
+			</tr>
+		</table>
+		<script src="headline.js"></script>
+		<script src="test.js"></script>
+		<script>
+			// Check that "bad" inputs are handled well when encoding 
+			test_encode("Encode foreign input", "!notproperhex!", "noun noun noun noun noun noun noun", "");
+			test_encode("Encode foreign input 2", "!notproperhex!", "noun", "");
+			test_encode("Encode blank input", "", "noun", "");
+			test_encode("Encode foreign format", "aa", "conjunction", "");
+			test_encode("Encode blank format", "aa", "", "");
+			test_encode("Encode blank input and format", "", "", "");
+
+			// Check that encoding is case-insensitive
+			test_encode("Encoding Capitalisation 1", "BD", "noun", "badger");
+			test_encode("Encoding Capitalisation 2", "Bd", "noun", "badger");
+
+			// Check that noun encoding is working
+			test_encode("Encode Noun 1", "73", "noun", "mohawk");
+			test_encode("Encode Noun 2", "bd", "noun", "badger");
+			test_encode("Encode Noun 3", "00", "noun", "kakuro");
+
+			// Check that verb encoding is working
+			/*test_encode("Encode Verb 1", "12", "verb", "???");
+			test_encode("Encode Verb 2", "f8", "verb", "???");
+			test_encode("Encode Verb 3", "bb", "verb", "???");*/
+
+			// Check that adjective encoding is working
+			/*test_encode("Encode Adjective 1", "4a", "adjective", "???");
+			test_encode("Encode Adjective 2", "cc", "adjective", "???");
+			test_encode("Encode Adjective 3", "1e", "adjective", "???");*/
+
+			// Check that encoding a sentence works
+			/*test_encode("Encode 3-word sentence", "7a2db2", "noun verb noun", "???");
+			test_encode("Encode 4-word sentence", "007a2db2", "adjective noun verb noun", "???");
+			test_encode("Encode 5-word sentence", "007a2d93b2", "adjective noun verb adjective noun", "???");
+			test_encode("Encode 6-word sentence", "007a2afd93b2", "adjective noun adverb verb adjective noun", "???");*/
+
+			// Check that encoding odd length hexs works
+			test_encode("Odd length hex encode 1", "a", "noun", "alzheimers");
+			test_encode("Odd length hex encode 2", "abc", "noun noun", "labyrinth eczema");
+
+			// Check that "bad" inputs are handled well when decoding 
+			test_decode("Decode only vowels", "aeiou aeiou", "");
+			test_decode("Decode punctuation", '£$^£"%^', "");
+
+			// Check that decoding a word with only one consonent works
+			test_decode("Incomplete input", "pie", "e");
+
+			// Check that for all 2 digit hex values x , decode(encode(x)) = x
+			test_symmetry("noun");
+			//test_symmetry("verb");
+			//test_symmetry("adjective");
+			//test_symmetry("adverb");
+
+		</script>
+	</body>
+</html>
